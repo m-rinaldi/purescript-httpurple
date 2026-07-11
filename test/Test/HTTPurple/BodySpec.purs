@@ -30,7 +30,7 @@ readSpec :: Test
 readSpec =
   describe "read" do
     it "is the body of the Request" do
-      body <- (liftEffect <<< read) =<< mockRequest "" "GET" "" "test" []
+      body <- (liftEffect <<< read) =<< mockRequest "" "QUERY" "" "test" []
       string <- liftEffect $ fromMaybe "" <$> readString (toStream body) UTF8
       string ?= "test"
 

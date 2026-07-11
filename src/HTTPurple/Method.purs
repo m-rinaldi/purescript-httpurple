@@ -19,6 +19,7 @@ data Method
   | Options
   | Trace
   | Patch
+  | Query
 
 -- | If two `Methods` are the same constructor, they are equal.
 derive instance eqMethod :: Eq Method
@@ -34,6 +35,7 @@ instance showMethod :: Show Method where
   show Options = "Options"
   show Trace = "Trace"
   show Patch = "Patch"
+  show Query = "Query"
 
 -- | Take an HTTP `Request` and extract the `Method` for that request.
 read :: IncomingMessage IMServer -> Method
@@ -46,4 +48,5 @@ read = method >>> case _ of
   "OPTIONS" -> Options
   "TRACE" -> Trace
   "PATCH" -> Patch
+  "QUERY" -> Query
   _ -> Get

@@ -221,6 +221,37 @@ get' ::
   Aff String
 get' port headers path = request' true port "GET" headers path >>= toString
 
+queryReq ::
+  Boolean ->
+  Int ->
+  Object String ->
+  String ->
+  String ->
+  Aff String
+queryReq secure port headers path = requestString secure port "QUERY" headers path >=> toString
+
+-- | Run an HTTP QUERY with the given url and return an Aff that contains the
+-- | string with the response body. You may think of QUERY as being GET, but allowing
+-- | a request body to be sent. In this case, we make the request body a string.
+query ::
+  Int ->
+  Object String ->
+  String ->
+  String ->
+  Aff String
+query = queryReq false
+
+-- | Run an HTTPS QUERY with the given url and return an Aff that contains the
+-- | string with the response body. You may think of QUERY as being GET, but allowing
+-- | a request body to be sent. In this case, we make the request body a string.
+query' ::
+  Int ->
+  Object String ->
+  String ->
+  String ->
+  Aff String
+query' = queryReq true
+
 -- | Run an HTTP POST with the given url and body and return an Aff that
 -- | contains the string with the response body.
 post ::

@@ -2,10 +2,7 @@ module Test.HTTPurple.MethodSpec where
 
 import Prelude
 
-import HTTPurple.Method
-  ( Method(Get, Post, Put, Delete, Head, Connect, Options, Trace, Patch)
-  , read
-  )
+import HTTPurple.Method (Method(Get, Post, Put, Delete, Head, Connect, Options, Trace, Patch, Query), read)
 import Test.HTTPurple.TestHelpers (Test, mockRequest, (?=))
 import Test.Spec (describe, it)
 
@@ -39,6 +36,9 @@ showSpec =
     describe "with a Patch" do
       it "is 'Patch'" do
         show Patch ?= "Patch"
+    describe "with a Query" do
+      it "is 'Query'" do
+        show Query ?= "Query"
 
 readSpec :: Test
 readSpec =
@@ -46,6 +46,14 @@ readSpec =
     describe "with a 'GET' Request" do
       it "is Get" do
         request <- mockRequest "" "GET" "" "" []
+        read request ?= Get
+    describe "with a 'QUERY' Request" do
+      it "is Query" do
+        request <- mockRequest "" "QUERY" "" "" []
+        read request ?= Query
+    describe "with a lowercase 'query' Request" do
+      it "is Get, since HTTP method tokens are case-sensitive" do
+        request <- mockRequest "" "query" "" "" []
         read request ?= Get
 
 methodSpec :: Test

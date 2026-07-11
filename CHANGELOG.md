@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unpublished
+- Add support for the HTTP `QUERY` method ([RFC 10008](https://www.rfc-editor.org/rfc/rfc10008))
 
 ## v4.0.0
 - Update to latest version of node libraries (#15 by @JordanMartinez)

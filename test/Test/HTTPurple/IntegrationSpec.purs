@@ -17,13 +17,14 @@ import Examples.MultiRoute.Main as MultiRoute
 import Examples.NodeMiddleware.Main as NodeMiddleware
 import Examples.PathSegments.Main as PathSegments
 import Examples.Post.Main as Post
+import Examples.Query.Main as Query
 import Examples.QueryParameters.Main as QueryParameters
 import Examples.SSL.Main as SSL
 import Foreign.Object (empty, singleton)
 import Foreign.Object as Object
 import Node.Buffer (toArray)
 import Node.FS.Aff (readFile)
-import Test.HTTPurple.TestHelpers (Test, awaitStarted, awaitStartedSecure, get, get', getBinary, getHeader, post, postBinary, (?=))
+import Test.HTTPurple.TestHelpers (Test, awaitStarted, awaitStartedSecure, get, get', getBinary, getHeader, post, postBinary, query, query', (?=))
 import Test.Spec (describe, it)
 import Test.Spec.Assertions.String (shouldStartWith)
 
@@ -33,6 +34,45 @@ asyncResponseSpec =
     close <- liftEffect AsyncResponse.main
     awaitStarted 8080
     response <- get 8080 empty "/"
+    liftEffect $ close $ pure unit
+    response ?= "hello world!"
+
+queryWithRequestBodySpec :: Test
+queryWithRequestBodySpec =
+  it "runs a QUERY and accepts a request body" do
+    close <- liftEffect Query.main
+    awaitStarted 8080
+    let body = "{ \"lastName\": { \"eq\": \"waltz\", \"caseSensitive\": false } } "
+    response <- query 8080 empty "/" body
+    liftEffect $ close $ pure unit
+    response ?= body
+
+queryWithEmptyBodySpec :: Test
+queryWithEmptyBodySpec =
+  it "runs a QUERY with an empty request body" do
+    close <- liftEffect Query.main
+    awaitStarted 8080
+    response <- query 8080 empty "/" ""
+    liftEffect $ close $ pure unit
+    response ?= ""
+
+queryVsGetSpec :: Test
+queryVsGetSpec =
+  it "distinguishes a QUERY from a GET on the same route" do
+    close <- liftEffect Query.main
+    awaitStarted 8080
+    getResponse <- get 8080 empty "/"
+    queryResponse <- query 8080 empty "/" "q=foo"
+    liftEffect $ close $ pure unit
+    getResponse ?= "send a QUERY request with a body to see it echoed back"
+    queryResponse ?= "q=foo"
+
+querySslSpec :: Test
+querySslSpec =
+  it "runs a QUERY over HTTPS" do
+    close <- liftEffect SSL.main
+    awaitStartedSecure 8080
+    response <- query' 8080 empty "/" "q=foo"
     liftEffect $ close $ pure unit
     response ?= "hello world!"
 
@@ -205,6 +245,10 @@ integrationSpec :: Test
 integrationSpec =
   describe "Integration" do
     asyncResponseSpec
+    queryWithRequestBodySpec
+    queryWithEmptyBodySpec
+    queryVsGetSpec
+    querySslSpec
     binaryRequestSpec
     binaryResponseSpec
     chunkedSpec
