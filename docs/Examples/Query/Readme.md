@@ -15,5 +15,5 @@ nix-shell --run 'example Query'
 Or, without nix:
 
 ```bash
-spago -x test.dhall run --main Examples.Query.Main
+spago run --main Examples.Query.Main
 ```
