@@ -3,6 +3,7 @@ module Test.Main where
 import Prelude
 
 import Test.HTTPurple.BodySpec (bodySpec)
+import Test.HTTPurple.CookieSpec (cookieSpec)
 import Test.HTTPurple.HeadersSpec (headersSpec)
 import Test.HTTPurple.IntegrationSpec (integrationSpec)
 import Test.HTTPurple.LookupSpec (lookupSpec)
@@ -23,6 +24,7 @@ import Test.Spec.Runner.Node (runSpecAndExitProcess)
 main :: TestSuite
 main = runSpecAndExitProcess [ specReporter ] $ describe "HTTPurple" do
   bodySpec
+  cookieSpec
   headersSpec
   lookupSpec
   methodSpec

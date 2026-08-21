@@ -1,6 +1,7 @@
 module HTTPurple
   ( module HTTPurple.Body
   , module HTTPurple.Cont
+  , module HTTPurple.Cookie
   , module HTTPurple.Headers
   , module HTTPurple.Json
   , module HTTPurple.Lookup
@@ -24,6 +25,7 @@ module HTTPurple
 import Data.Generic.Rep (class Generic)
 import HTTPurple.Body (toBuffer, toStream, toString)
 import HTTPurple.Cont (usingCont)
+import HTTPurple.Cookie (Cookie, CookieAttributes, CookieAttributesR, CookieDeletionAttributesR, CookieName, CookieValue, SameSite(Strict, Lax, None), addCookie, clearCookie, clearCookie', cookie, cookie', cookieHeader, defaultAttributes, expireCookie, expireCookie', requestCookies, serialize, setCookie, setCookie')
 import HTTPurple.Headers (RequestHeaders, ResponseHeaders, empty, header, headers)
 import HTTPurple.Json (JsonDecoder(..), JsonEncoder(..), fromJson, jsonHeaders, toJson)
 import HTTPurple.Lookup (at, has, lookup, (!!), (!?), (!@))
